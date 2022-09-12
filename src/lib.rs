@@ -3,12 +3,12 @@ mod my_plugin2;
 
 use std::any::TypeId;
 
+use linkme::distributed_slice;
+
 pub use self::{my_plugin::MyPlugin, my_plugin2::MyPlugin2};
 
-inventory::collect!(Factory);
-
-#[derive(Clone, Copy, Debug)]
-pub struct Factory(pub fn() -> Meta);
+#[distributed_slice]
+pub static FACTORY: [fn() -> Meta] = [..];
 
 #[derive(Clone, Copy, Debug)]
 pub struct Meta {
@@ -19,9 +19,9 @@ pub struct Meta {
 
 impl Meta {
     pub fn collect() -> Vec<Self> {
-        inventory::iter::<Factory>
+        FACTORY
             .into_iter()
-            .map(|factory| (factory.0)())
+            .map(|factory| (factory)())
             .collect()
     }
 }

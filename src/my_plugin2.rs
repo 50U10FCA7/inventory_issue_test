@@ -1,6 +1,9 @@
-use super::{new_plugin, Factory, Plugin};
+use super::{new_plugin, FACTORY, Meta, Plugin};
 
-inventory::submit!(Factory(new_plugin::<MyPlugin2>));
+use linkme::distributed_slice;
+
+#[distributed_slice(FACTORY)]
+static MY_PLUGIN_2: fn() -> Meta = new_plugin::<MyPlugin2>;
 
 pub struct MyPlugin2;
 

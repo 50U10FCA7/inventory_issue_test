@@ -1,8 +1,11 @@
 use std::marker::PhantomData;
 
-use super::{new_plugin, Factory, Plugin};
+use linkme::distributed_slice;
 
-inventory::submit!(Factory(new_plugin::<MyPlugin<()>>));
+use super::{new_plugin, FACTORY, Meta, Plugin};
+
+#[distributed_slice(FACTORY)]
+static MY_PLUGIN: fn() -> Meta = new_plugin::<MyPlugin<()>>;
 
 pub struct MyPlugin<T>(PhantomData<T>);
 
